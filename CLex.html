@@ -51,6 +51,16 @@
             font-size: 58px;
             font-weight: 700;
         }
+
+        /* Prevent selection and copying on branding */
+        .unselectable {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-drag: none;
+        }
         @media (max-width: 768px) {
             .mobile-search-focus {
                 transform: scale(1.02);
