@@ -581,14 +581,53 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
         }
 
         function setupEventListeners() {
+            // Make app logo return to home from anywhere
+            const appLogo = document.getElementById('appLogoBtn');
+            if (appLogo) {
+                appLogo.addEventListener('click', () => {
+                    // Switch to search screen and update nav state
+                    switchScreen('search');
+                    document.querySelectorAll('.nav-btn').forEach(b => {
+                        b.classList.remove('active', 'text-primary');
+                        b.classList.add('text-gray-400');
+                    });
+                    const searchNav = document.querySelector('.nav-btn[data-screen="search"]');
+                    if (searchNav) {
+                        searchNav.classList.add('active', 'text-primary');
+                        searchNav.classList.remove('text-gray-400');
+                    }
+
+                    // Close potential overlays/modals and focus search
+                    try { closeWordDetail(); } catch (e) {}
+                    try { closeAddWordModal(); } catch (e) {}
+                    try { closeDevConsole(); } catch (e) {}
+
+                    const input = document.getElementById('searchInput');
+                    if (input) input.focus();
+                    // Scroll search results to top
+                    const resultsContainer = document.querySelector('#searchScreen .flex-1');
+                    if (resultsContainer && typeof resultsContainer.scrollTo === 'function') {
+                        resultsContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+
+                // accessibility: support Enter key
+                appLogo.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        appLogo.click();
+                    }
+                });
+            }
+
             // Search functionality
             const searchInput = document.getElementById('searchInput');
             const clearSearchBtn = document.getElementById('clearSearchBtn');
-            
+
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value;
                 updateSearchResults(query);
-                
+
                 if (query.length > 0) {
                     clearSearchBtn.classList.remove('hidden');
                 } else {
@@ -608,7 +647,7 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
                 btn.addEventListener('click', () => {
                     const screen = btn.dataset.screen;
                     switchScreen(screen);
-                    
+
                     // Update active state
                     document.querySelectorAll('.nav-btn').forEach(b => {
                         b.classList.remove('active', 'text-primary');
@@ -627,33 +666,33 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             // Settings (long press for dev console)
             const settingsBtn = document.getElementById('settingsBtn');
             let pressTimer;
-            
+
             settingsBtn.addEventListener('mousedown', () => {
                 pressTimer = setTimeout(() => {
                     openDevConsole();
                 }, 1000);
             });
-            
+
             settingsBtn.addEventListener('mouseup', () => {
                 clearTimeout(pressTimer);
             });
-            
+
             settingsBtn.addEventListener('touchstart', () => {
                 pressTimer = setTimeout(() => {
                     openDevConsole();
                 }, 5000);
             });
-            
+
             settingsBtn.addEventListener('touchend', () => {
                 clearTimeout(pressTimer);
             });
 
             // Modal functionality
             setupModalListeners();
-            
+
             // Developer console
             setupDevConsoleListeners();
-            
+
             // Word form
             setupWordFormListeners();
         }
