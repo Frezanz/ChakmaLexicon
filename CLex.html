@@ -639,9 +639,34 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             });
 
             // Dark mode toggle
-            document.getElementById('darkModeToggle').addEventListener('click', () => {
-                document.documentElement.classList.toggle('dark');
-            });
+            const darkToggleBtn = document.getElementById('darkModeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+
+            function updateThemeIcon() {
+                if (!themeIcon) return;
+                const isDark = document.documentElement.classList.contains('dark');
+                if (isDark) {
+                    themeIcon.classList.remove('fa-moon', 'moon');
+                    themeIcon.classList.add('fa-sun');
+                    themeIcon.style.transform = 'rotate(0deg)';
+                    darkToggleBtn.setAttribute('aria-label', 'Switch to light mode');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon', 'moon');
+                    themeIcon.style.transform = 'rotate(-20deg)';
+                    darkToggleBtn.setAttribute('aria-label', 'Switch to dark mode');
+                }
+            }
+
+            if (darkToggleBtn) {
+                darkToggleBtn.addEventListener('click', () => {
+                    document.documentElement.classList.toggle('dark');
+                    updateThemeIcon();
+                });
+            }
+
+            // Initialize icon state
+            updateThemeIcon();
 
             // Settings (long press for dev console) — only if settings button exists
             const settingsBtn = document.getElementById('settingsBtn');
