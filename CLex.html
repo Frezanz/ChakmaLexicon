@@ -645,15 +645,16 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             function updateThemeIcon() {
                 if (!themeIcon) return;
                 const isDark = document.documentElement.classList.contains('dark');
+                // Show moon when in dark mode, show sun when in light mode
                 if (isDark) {
-                    themeIcon.classList.remove('fa-moon', 'moon');
-                    themeIcon.classList.add('fa-sun');
-                    themeIcon.style.transform = 'rotate(0deg)';
-                    darkToggleBtn.setAttribute('aria-label', 'Switch to light mode');
-                } else {
                     themeIcon.classList.remove('fa-sun');
                     themeIcon.classList.add('fa-moon', 'moon');
                     themeIcon.style.transform = 'rotate(-20deg)';
+                    darkToggleBtn.setAttribute('aria-label', 'Switch to light mode');
+                } else {
+                    themeIcon.classList.remove('fa-moon', 'moon');
+                    themeIcon.classList.add('fa-sun');
+                    themeIcon.style.transform = 'rotate(0deg)';
                     darkToggleBtn.setAttribute('aria-label', 'Switch to dark mode');
                 }
             }
