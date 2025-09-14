@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Chakma&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -44,6 +45,12 @@
         .logo-glow {
             filter: drop-shadow(0 12px 30px rgba(239,71,111,0.14));
         }
+        .logo-glyph {
+            fill: #FFFFFF;
+            font-family: 'Noto Sans Chakma', 'Noto Sans', sans-serif;
+            font-size: 58px;
+            font-weight: 700;
+        }
         @media (max-width: 768px) {
             .mobile-search-focus {
                 transform: scale(1.02);
@@ -79,10 +86,9 @@
                                     <rect x="10" y="10" width="80" height="80" rx="14" fill="white" opacity="0.06"/>
                                 </g>
 
-                                <!-- stylized Chakma-inspired mark (abstract) -->
-                                <g transform="translate(50,50) scale(0.8)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M-8 -6 C -2 -10, 6 -10, 12 -6 C 8 -2, 2 0, 0 6 C -2 12, -8 14, -12 10" opacity="0.98" />
-                                    <circle cx="16" cy="-12" r="2.5" fill="#FFFFFF" stroke="none" />
+                                <!-- Chakma letter mark -->
+                                <g transform="translate(50,50)">
+                                    <text class="logo-glyph" text-anchor="middle" dominant-baseline="central">𑄌</text>
                                 </g>
 
                             </svg>
