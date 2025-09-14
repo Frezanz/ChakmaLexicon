@@ -632,29 +632,31 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
                 document.documentElement.classList.toggle('dark');
             });
 
-            // Settings (long press for dev console)
+            // Settings (long press for dev console) — only if settings button exists
             const settingsBtn = document.getElementById('settingsBtn');
             let pressTimer;
 
-            settingsBtn.addEventListener('mousedown', () => {
-                pressTimer = setTimeout(() => {
-                    openDevConsole();
-                }, 1000);
-            });
+            if (settingsBtn) {
+                settingsBtn.addEventListener('mousedown', () => {
+                    pressTimer = setTimeout(() => {
+                        if (typeof openDevConsole === 'function') openDevConsole();
+                    }, 1000);
+                });
 
-            settingsBtn.addEventListener('mouseup', () => {
-                clearTimeout(pressTimer);
-            });
+                settingsBtn.addEventListener('mouseup', () => {
+                    clearTimeout(pressTimer);
+                });
 
-            settingsBtn.addEventListener('touchstart', () => {
-                pressTimer = setTimeout(() => {
-                    openDevConsole();
-                }, 5000);
-            });
+                settingsBtn.addEventListener('touchstart', () => {
+                    pressTimer = setTimeout(() => {
+                        if (typeof openDevConsole === 'function') openDevConsole();
+                    }, 5000);
+                });
 
-            settingsBtn.addEventListener('touchend', () => {
-                clearTimeout(pressTimer);
-            });
+                settingsBtn.addEventListener('touchend', () => {
+                    clearTimeout(pressTimer);
+                });
+            }
 
             // Modal functionality
             setupModalListeners();
