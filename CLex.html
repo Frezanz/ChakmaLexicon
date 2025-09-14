@@ -197,10 +197,6 @@
                         <i class="fas fa-heart text-xl mb-1"></i>
                         <span class="text-xs">Favorites</span>
                     </button>
-                    <button id="settingsBtn" class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" aria-label="Settings">
-                        <i class="fas fa-cog text-xl mb-1"></i>
-                        <span class="text-xs">Settings</span>
-                    </button>
                 </div>
             </div>
         </nav>
@@ -278,59 +274,6 @@
         </div>
     </div>
 
-    <!-- Developer Console Modal -->
-    <div id="devConsoleModal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-        <div class="absolute inset-4 bg-white dark:bg-gray-800 rounded-2xl overflow-hidden">
-            <!-- PIN Entry Screen -->
-            <div id="pinEntryScreen" class="h-full flex items-center justify-center">
-                <div class="text-center">
-                    <h2 class="text-2xl font-bold mb-6">Developer Console</h2>
-                    <div class="mb-6">
-                        <input 
-                            type="password" 
-                            id="devPinInput" 
-                            placeholder="Enter 6-digit PIN"
-                            maxlength="6"
-                            class="text-center text-2xl tracking-widest w-48 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent"
-                        >
-                    </div>
-                    <div class="space-x-4">
-                        <button id="devPinSubmit" class="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
-                            Enter
-                        </button>
-                        <button id="closePinModal" class="px-6 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition-colors">
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Developer Console Content -->
-            <div id="devConsoleContent" class="h-full hidden">
-                <div class="h-full flex flex-col">
-                    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-between">
-                            <h2 class="text-2xl font-bold">Developer Console</h2>
-                            <button id="closeDevConsole" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-times text-xl"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex-1 overflow-y-auto p-6">
-                        <div class="mb-6">
-                            <button id="addWordBtn" class="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
-                                <i class="fas fa-plus mr-2"></i>Add New Word
-                            </button>
-                        </div>
-
-                        <div id="wordsList" class="space-y-3"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Add/Edit Word Modal -->
     <div id="addWordModal" class="fixed inset-0 z-60 hidden">
@@ -612,7 +555,6 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
                     // Close potential overlays/modals and focus search
                     try { closeWordDetail(); } catch (e) {}
                     try { closeAddWordModal(); } catch (e) {}
-                    try { closeDevConsole(); } catch (e) {}
 
                     const input = document.getElementById('searchInput');
                     if (input) input.focus();
@@ -681,9 +623,6 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
                         });
                         btn.classList.add('active', 'text-primary');
                         btn.classList.remove('text-gray-400');
-                    } else if (btn.id === 'settingsBtn') {
-                        // Open settings (short tap)
-                        openDevConsole();
                     }
                 });
             });
@@ -719,9 +658,6 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
 
             // Modal functionality
             setupModalListeners();
-
-            // Developer console
-            setupDevConsoleListeners();
 
             // Word form
             setupWordFormListeners();
@@ -1019,83 +955,7 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             document.getElementById(tabName + 'Tab').classList.remove('hidden');
         }
 
-        function setupDevConsoleListeners() {
-            // PIN entry
-            document.getElementById('devPinSubmit').addEventListener('click', checkDevPin);
-            document.getElementById('devPinInput').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    checkDevPin();
-                }
-            });
-            
-            // Close buttons
-            document.getElementById('closePinModal').addEventListener('click', closeDevConsole);
-            document.getElementById('closeDevConsole').addEventListener('click', closeDevConsole);
-            
-            // Add word button
-            document.getElementById('addWordBtn').addEventListener('click', () => {
-                openAddWordModal();
-            });
-        }
 
-        function openDevConsole() {
-            document.getElementById('devConsoleModal').classList.remove('hidden');
-            document.getElementById('devPinInput').focus();
-        }
-
-        function checkDevPin() {
-            const pin = document.getElementById('devPinInput').value;
-            
-            // Simple PIN check (in real app, this would be nullperly hashed)
-            if (pin === '448538') {
-                isDevModeActive = true;
-                document.getElementById('pinEntryScreen').classList.add('hidden');
-                document.getElementById('devConsoleContent').classList.remove('hidden');
-                updateWordsList();
-            } else {
-                // Show error (in real app, would be a proper modal)
-                document.getElementById('devPinInput').value = '';
-                document.getElementById('devPinInput').style.borderColor = '#ef4444';
-                setTimeout(() => {
-                    document.getElementById('devPinInput').style.borderColor = '';
-                }, 2000);
-            }
-        }
-
-        function closeDevConsole() {
-            document.getElementById('devConsoleModal').classList.add('hidden');
-            document.getElementById('pinEntryScreen').classList.remove('hidden');
-            document.getElementById('devConsoleContent').classList.add('hidden');
-            document.getElementById('devPinInput').value = '';
-            isDevModeActive = false;
-        }
-
-        function updateWordsList() {
-            const wordsList = document.getElementById('wordsList');
-            
-            wordsList.innerHTML = currentWords.map(word => `
-                <div class="bg-white dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
-                    <div class="flex items-center justify-between">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-3 mb-2">
-                                <h4 class="font-semibold">${word.term}</h4>
-                                <span class="text-sm text-gray-500">${word.pronunciationIPA || ''}</span>
-                                <span class="px-2 py-1 bg-primary bg-opacity-20 text-primary rounded text-xs">${word.partOfSpeech}</span>
-                            </div>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">${word.shortDefinition}</p>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button onclick="editWord('${word.id}')" class="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900 rounded transition-colors">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="deleteWord('${word.id}')" class="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900 rounded transition-colors">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
 
         function setupWordFormListeners() {
             // Character counter for short definition
