@@ -192,9 +192,9 @@
     <!-- Word Detail Modal -->
     <div id="wordDetailModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black bg-opacity-50" id="modalOverlay"></div>
-        <div class="absolute inset-x-4 bottom-10 sm:bottom-8 md:bottom-16 bg-white dark:bg-gray-800 rounded-2xl max-h-[85vh] max-w-3xl mx-auto overflow-hidden">
+        <div class="absolute inset-x-4 bottom-20 sm:bottom-16 md:bottom-24 lg:bottom-28 bg-white dark:bg-gray-800 rounded-2xl max-h-[80vh] max-w-3xl mx-auto overflow-hidden">
             <!-- Adjusted modal: lifted higher, centered, and slightly smaller height -->
-            <div class="p-6">
+            <div class="p-4 sm:p-6">
                 <!-- Modal Header -->
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex-1">
@@ -217,13 +217,15 @@
                 </div>
 
                 <!-- Modal Content -->
-                <div class="max-h-[60vh] overflow-y-auto">
+                <div class="max-h-[65vh] overflow-y-auto px-0 sm:px-6 pb-6">
                     <!-- Tabs -->
-                    <div class="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
-                        <button class="modal-tab active flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="definition">Definition</button>
-                        <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="examples">Examples</button>
-                        <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="synonyms">Synonyms</button>
-                        <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="etymology">Etymology</button>
+                    <div class="sticky top-0 z-20 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm -mx-4 sm:mx-0 px-4 sm:px-0 pb-3">
+                        <div class="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg w-full">
+                            <button class="modal-tab active flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="definition">Definition</button>
+                            <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="examples">Examples</button>
+                            <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="synonyms">Synonyms</button>
+                            <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="etymology">Etymology</button>
+                        </div>
                     </div>
 
                     <!-- Tab Content -->
@@ -254,7 +256,7 @@
                         </div>
 
                         <div id="etymologyTab" class="tab-content hidden">
-                            <div id="modalEtymology" class="text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700"> </div>
+                            <div id="modalEtymology" class="w-full text-gray-700 dark:text-gray-300 prose dark:prose-invert max-w-none p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-100 dark:border-gray-700"> </div>
                         </div>
                     </div>
                 </div>
