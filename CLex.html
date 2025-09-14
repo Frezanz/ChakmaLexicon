@@ -647,15 +647,20 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const screen = btn.dataset.screen;
-                    switchScreen(screen);
+                    if (screen) {
+                        switchScreen(screen);
 
-                    // Update active state
-                    document.querySelectorAll('.nav-btn').forEach(b => {
-                        b.classList.remove('active', 'text-primary');
-                        b.classList.add('text-gray-400');
-                    });
-                    btn.classList.add('active', 'text-primary');
-                    btn.classList.remove('text-gray-400');
+                        // Update active state
+                        document.querySelectorAll('.nav-btn').forEach(b => {
+                            b.classList.remove('active', 'text-primary');
+                            b.classList.add('text-gray-400');
+                        });
+                        btn.classList.add('active', 'text-primary');
+                        btn.classList.remove('text-gray-400');
+                    } else if (btn.id === 'settingsBtn') {
+                        // Open settings (short tap)
+                        openDevConsole();
+                    }
                 });
             });
 
