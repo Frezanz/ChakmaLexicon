@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Chakma&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -44,6 +45,22 @@
         .logo-glow {
             filter: drop-shadow(0 12px 30px rgba(239,71,111,0.14));
         }
+        .logo-glyph {
+            fill: #FFFFFF;
+            font-family: 'Noto Sans Chakma', 'Noto Sans', sans-serif;
+            font-size: 58px;
+            font-weight: 700;
+        }
+
+        /* Prevent selection and copying on branding */
+        .unselectable {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-drag: none;
+        }
         @media (max-width: 768px) {
             .mobile-search-focus {
                 transform: scale(1.02);
@@ -59,7 +76,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16">
                     <div class="flex items-center space-x-3">
-                        <svg class="app-logo w-8 h-8 logo-glow" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+                        <svg id="appLogoBtn" class="app-logo w-8 h-8 logo-glow cursor-pointer unselectable" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="button" aria-label="ChakmaLex home" tabindex="0">
                                 <title>ChakmaLex logo</title>
                                 <defs>
                                     <linearGradient id="lg1" x1="0" x2="1" y1="0" y2="1">
@@ -79,21 +96,17 @@
                                     <rect x="10" y="10" width="80" height="80" rx="14" fill="white" opacity="0.06"/>
                                 </g>
 
-                                <!-- stylized Chakma-inspired mark (abstract) -->
-                                <g transform="translate(50,50) scale(0.8)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M-8 -6 C -2 -10, 6 -10, 12 -6 C 8 -2, 2 0, 0 6 C -2 12, -8 14, -12 10" opacity="0.98" />
-                                    <circle cx="16" cy="-12" r="2.5" fill="#FFFFFF" stroke="none" />
+                                <!-- Chakma letter mark -->
+                                <g transform="translate(50,50)">
+                                    <text class="logo-glyph" text-anchor="middle" dominant-baseline="central">𑄌</text>
                                 </g>
 
                             </svg>
-                        <h1 class="text-xl font-bold">ChakmaLex</h1>
+                        <h1 id="siteTitle" class="text-xl font-bold unselectable">ChakmaLex</h1>
                     </div>
                     <div class="flex items-center space-x-4">
                         <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors">
                             <i class="fas fa-moon dark:fa-sun"></i>
-                        </button>
-                        <button id="settingsBtn" class="p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors">
-                            <i class="fas fa-cog"></i>
                         </button>
                     </div>
                 </div>
@@ -184,6 +197,10 @@
                         <i class="fas fa-heart text-xl mb-1"></i>
                         <span class="text-xs">Favorites</span>
                     </button>
+                    <button id="settingsBtn" class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" aria-label="Settings">
+                        <i class="fas fa-cog text-xl mb-1"></i>
+                        <span class="text-xs">Settings</span>
+                    </button>
                 </div>
             </div>
         </nav>
@@ -192,7 +209,7 @@
     <!-- Word Detail Modal -->
     <div id="wordDetailModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black bg-opacity-50" id="modalOverlay"></div>
-        <div class="absolute inset-x-0 bottom-0 bg-white dark:bg-gray-800 rounded-t-3xl max-h-[90vh] overflow-hidden">
+        <div class="absolute inset-x-0 bottom-24 sm:bottom-32 md:bottom-40 lg:bottom-44 bg-white dark:bg-gray-800 rounded-t-3xl max-h-[90vh] overflow-hidden">
             <div class="p-6">
                 <!-- Modal Header -->
                 <div class="flex items-center justify-between mb-6">
@@ -575,14 +592,67 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
         }
 
         function setupEventListeners() {
+            // Make app logo return to home from anywhere
+            const appLogo = document.getElementById('appLogoBtn');
+            const siteTitle = document.getElementById('siteTitle');
+            if (appLogo) {
+                appLogo.addEventListener('click', () => {
+                    // Switch to search screen and update nav state
+                    switchScreen('search');
+                    document.querySelectorAll('.nav-btn').forEach(b => {
+                        b.classList.remove('active', 'text-primary');
+                        b.classList.add('text-gray-400');
+                    });
+                    const searchNav = document.querySelector('.nav-btn[data-screen="search"]');
+                    if (searchNav) {
+                        searchNav.classList.add('active', 'text-primary');
+                        searchNav.classList.remove('text-gray-400');
+                    }
+
+                    // Close potential overlays/modals and focus search
+                    try { closeWordDetail(); } catch (e) {}
+                    try { closeAddWordModal(); } catch (e) {}
+                    try { closeDevConsole(); } catch (e) {}
+
+                    const input = document.getElementById('searchInput');
+                    if (input) input.focus();
+                    // Scroll search results to top
+                    const resultsContainer = document.querySelector('#searchScreen .flex-1');
+                    if (resultsContainer && typeof resultsContainer.scrollTo === 'function') {
+                        resultsContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+
+                // accessibility: support Enter key
+                appLogo.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        appLogo.click();
+                    }
+                });
+
+                // Prevent copy/select on logo
+                appLogo.addEventListener('copy', (e) => e.preventDefault());
+                appLogo.addEventListener('selectstart', (e) => e.preventDefault());
+                appLogo.addEventListener('contextmenu', (e) => e.preventDefault());
+            }
+
+            // Prevent copy/select on site title
+            if (siteTitle) {
+                siteTitle.classList.add('unselectable');
+                siteTitle.addEventListener('copy', (e) => e.preventDefault());
+                siteTitle.addEventListener('selectstart', (e) => e.preventDefault());
+                siteTitle.addEventListener('contextmenu', (e) => e.preventDefault());
+            }
+
             // Search functionality
             const searchInput = document.getElementById('searchInput');
             const clearSearchBtn = document.getElementById('clearSearchBtn');
-            
+
             searchInput.addEventListener('input', (e) => {
                 const query = e.target.value;
                 updateSearchResults(query);
-                
+
                 if (query.length > 0) {
                     clearSearchBtn.classList.remove('hidden');
                 } else {
@@ -601,15 +671,20 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const screen = btn.dataset.screen;
-                    switchScreen(screen);
-                    
-                    // Update active state
-                    document.querySelectorAll('.nav-btn').forEach(b => {
-                        b.classList.remove('active', 'text-primary');
-                        b.classList.add('text-gray-400');
-                    });
-                    btn.classList.add('active', 'text-primary');
-                    btn.classList.remove('text-gray-400');
+                    if (screen) {
+                        switchScreen(screen);
+
+                        // Update active state
+                        document.querySelectorAll('.nav-btn').forEach(b => {
+                            b.classList.remove('active', 'text-primary');
+                            b.classList.add('text-gray-400');
+                        });
+                        btn.classList.add('active', 'text-primary');
+                        btn.classList.remove('text-gray-400');
+                    } else if (btn.id === 'settingsBtn') {
+                        // Open settings (short tap)
+                        openDevConsole();
+                    }
                 });
             });
 
@@ -621,33 +696,33 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
             // Settings (long press for dev console)
             const settingsBtn = document.getElementById('settingsBtn');
             let pressTimer;
-            
+
             settingsBtn.addEventListener('mousedown', () => {
                 pressTimer = setTimeout(() => {
                     openDevConsole();
                 }, 1000);
             });
-            
+
             settingsBtn.addEventListener('mouseup', () => {
                 clearTimeout(pressTimer);
             });
-            
+
             settingsBtn.addEventListener('touchstart', () => {
                 pressTimer = setTimeout(() => {
                     openDevConsole();
                 }, 5000);
             });
-            
+
             settingsBtn.addEventListener('touchend', () => {
                 clearTimeout(pressTimer);
             });
 
             // Modal functionality
             setupModalListeners();
-            
+
             // Developer console
             setupDevConsoleListeners();
-            
+
             // Word form
             setupWordFormListeners();
         }
