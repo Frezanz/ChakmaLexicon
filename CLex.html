@@ -61,6 +61,17 @@
             -webkit-touch-callout: none; /* iOS Safari */
             -webkit-user-drag: none;
         }
+
+        /* Theme icon styling */
+        .theme-icon {
+            display: inline-block;
+            transition: transform 0.18s ease, color 0.18s ease;
+        }
+        /* Slight upward tilt for moon glyph so it reads as crescent */
+        .theme-icon.moon {
+            transform: rotate(-20deg);
+        }
+
         @media (max-width: 768px) {
             .mobile-search-focus {
                 transform: scale(1.02);
