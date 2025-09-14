@@ -1,0 +1,14 @@
+{
+  "name": "chakmalex",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static site serving CLex.html",
+  "scripts": {
+    "dev": "http-server -p 3000 -c-1 -s .",
+    "start": "http-server -p 3000 -c-1 -s .",
+    "build": "echo \"No build step\""
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
