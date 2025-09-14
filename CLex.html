@@ -584,6 +584,7 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
         function setupEventListeners() {
             // Make app logo return to home from anywhere
             const appLogo = document.getElementById('appLogoBtn');
+            const siteTitle = document.getElementById('siteTitle');
             if (appLogo) {
                 appLogo.addEventListener('click', () => {
                     // Switch to search screen and update nav state
@@ -619,6 +620,19 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
                         appLogo.click();
                     }
                 });
+
+                // Prevent copy/select on logo
+                appLogo.addEventListener('copy', (e) => e.preventDefault());
+                appLogo.addEventListener('selectstart', (e) => e.preventDefault());
+                appLogo.addEventListener('contextmenu', (e) => e.preventDefault());
+            }
+
+            // Prevent copy/select on site title
+            if (siteTitle) {
+                siteTitle.classList.add('unselectable');
+                siteTitle.addEventListener('copy', (e) => e.preventDefault());
+                siteTitle.addEventListener('selectstart', (e) => e.preventDefault());
+                siteTitle.addEventListener('contextmenu', (e) => e.preventDefault());
             }
 
             // Search functionality
