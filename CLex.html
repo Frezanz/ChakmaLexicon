@@ -885,6 +885,37 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
                 });
             });
 
+            // More screen buttons
+            const moreSettingsBtn = document.getElementById('moreSettingsBtn');
+            const morePrivacyBtn = document.getElementById('morePrivacyBtn');
+            const moreTermsBtn = document.getElementById('moreTermsBtn');
+            const moreDevConsoleBtn = document.getElementById('moreDevConsoleBtn');
+
+            if (moreSettingsBtn) {
+                moreSettingsBtn.addEventListener('click', () => {
+                    switchScreen('settings');
+                });
+            }
+            if (morePrivacyBtn) {
+                morePrivacyBtn.addEventListener('click', () => {
+                    switchScreen('settings');
+                    const privacyTab = document.querySelector('[data-settings-tab="privacySection"]');
+                    if (privacyTab) privacyTab.click();
+                });
+            }
+            if (moreTermsBtn) {
+                moreTermsBtn.addEventListener('click', () => {
+                    switchScreen('settings');
+                    const termsTab = document.querySelector('[data-settings-tab="termsSection"]');
+                    if (termsTab) termsTab.click();
+                });
+            }
+            if (moreDevConsoleBtn) {
+                moreDevConsoleBtn.addEventListener('click', () => {
+                    openDevConsole();
+                });
+            }
+
             // Modal functionality
             setupModalListeners();
 
