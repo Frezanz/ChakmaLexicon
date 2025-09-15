@@ -1,13 +1,1102 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="refresh" content="0;url=./CLex.html">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Redirecting…</title>
-  </head>
-  <body>
-    <p>If you are not redirected automatically, <a href="./CLex.html">click here</a>.</p>
-    <script>location.replace('./CLex.html');</script>
-  </body>
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChakmaLex - Personal Dictionary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Chakma&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        'primary-dark': '#4A49C7'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.9);
+        }
+        .glass-effect.dark {
+            background: rgba(24, 24, 27, 0.9);
+        }
+        .word-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .word-card:hover {
+            transform: translateY(-2px);
+        }
+        /* Logo styles */
+        .app-logo {
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+            display: inline-block;
+            object-fit: cover;
+        }
+        .logo-glow {
+            filter: drop-shadow(0 12px 30px rgba(239,71,111,0.14));
+        }
+        .logo-glyph {
+            fill: #FFFFFF;
+            font-family: 'Noto Sans Chakma', 'Noto Sans', sans-serif;
+            font-size: 58px;
+            font-weight: 700;
+        }
+
+        /* Prevent selection and copying on branding */
+        .unselectable {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none; /* iOS Safari */
+            -webkit-user-drag: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-search-focus {
+                transform: scale(1.02);
+            }
+        }
+    </style>
+</head>
+<body class="h-full bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
+    <!-- Main App Container -->
+    <div id="app" class="h-full flex flex-col">
+        <!-- Header -->
+        <header class="bg-primary dark:bg-primary-dark text-white shadow-lg">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center space-x-3">
+                        <svg id="appLogoBtn" class="app-logo w-8 h-8 logo-glow cursor-pointer unselectable" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="button" aria-label="ChakmaLex home" tabindex="0">
+                                <title>ChakmaLex logo</title>
+                                <defs>
+                                    <linearGradient id="lg1" x1="0" x2="1" y1="0" y2="1">
+                                        <stop offset="0%" stop-color="#FF7A7A" />
+                                        <stop offset="50%" stop-color="#FF5E9A" />
+                                        <stop offset="100%" stop-color="#FFB86B" />
+                                    </linearGradient>
+                                    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+                                        <feDropShadow dx="0" dy="6" stdDeviation="14" flood-color="#F87171" flood-opacity="0.18"/>
+                                    </filter>
+                                </defs>
+
+                                <!-- rounded square background -->
+                                <g filter="url(#softShadow)">
+                                    <rect x="6" y="6" width="88" height="88" rx="18" fill="url(#lg1)" />
+                                    <!-- subtle inner gloss -->
+                                    <rect x="10" y="10" width="80" height="80" rx="14" fill="white" opacity="0.06"/>
+                                </g>
+
+                                <!-- Chakma letter mark -->
+                                <g transform="translate(50,50)">
+                                    <text class="logo-glyph" text-anchor="middle" dominant-baseline="central">𑄌</text>
+                                </g>
+
+                            </svg>
+                        <h1 id="siteTitle" class="text-xl font-bold unselectable">ChakmaLex</h1>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-white hover:bg-opacity-20 transition-colors" aria-label="Toggle theme">
+                            <i class="fas fa-sun block dark:hidden" aria-hidden="true"></i>
+                            <i class="fas fa-moon hidden dark:block text-gray-700" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-hidden">
+            <!-- Search Screen -->
+            <div id="searchScreen" class="h-full flex flex-col">
+                <!-- Search Bar -->
+                <div class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 p-4">
+                    <div class="max-w-2xl mx-auto">
+                        <div class="relative">
+                            <input 
+                                type="text" 
+                                id="searchInput" 
+                                placeholder="Search for a word..."
+                                class="w-full text-base px-4 py-3 pl-12 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                            <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            <button id="clearSearchBtn" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 p-1 hidden">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div class="flex-1 overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <!-- Welcome State -->
+                        <div id="welcomeState" class="text-center py-16">
+                            <div class="mb-6">
+                                <i class="fas fa-search text-6xl text-gray-300 dark:text-gray-600"></i>
+                            </div>
+                            <h2 class="text-2xl font-semibold mb-2 text-gray-600 dark:text-gray-400">Welcome to ChakmaLex</h2>
+                            <p class="text-gray-500 dark:text-gray-500">Start typing to search for words and definitions</p>
+                        </div>
+
+                        <!-- Search Results List -->
+                        <div id="searchResults" class="space-y-3 hidden"></div>
+
+                        <!-- No Results State -->
+                        <div id="noResultsState" class="text-center py-16 hidden">
+                            <div class="mb-6">
+                                <i class="fas fa-search-minus text-6xl text-gray-300 dark:text-gray-600"></i>
+                            </div>
+                            <h2 class="text-xl font-semibold mb-2 text-gray-600 dark:text-gray-400">No Results Found</h2>
+                            <p class="text-gray-500 dark:text-gray-500">Try a different search term or check your spelling</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favorites Screen -->
+            <div id="favoritesScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Favorites</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Your saved words</p>
+                        </div>
+                        <div id="favoritesList" class="space-y-3"></div>
+                        <div id="emptyFavoritesState" class="text-center py-16">
+                            <div class="mb-6">
+                                <i class="fas fa-heart text-6xl text-gray-300 dark:text-gray-600"></i>
+                            </div>
+                            <h2 class="text-xl font-semibold mb-2 text-gray-600 dark:text-gray-400">No Favorites Yet</h2>
+                            <p class="text-gray-500 dark:text-gray-500">Star words to add them to your favorites</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Settings Screen -->
+            <div id="settingsScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Settings</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Manage your preferences and privacy</p>
+                        </div>
+
+                        <!-- Settings Tabs -->
+                        <div class="mb-6">
+                            <div class="flex space-x-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                                <button data-settings-tab="privacySection" class="settings-tab bg-white dark:bg-gray-600 text-primary dark:text-primary px-4 py-2 rounded-md text-sm font-medium">Privacy Policy</button>
+                                <button data-settings-tab="termsSection" class="settings-tab text-gray-600 dark:text-gray-300 px-4 py-2 rounded-md text-sm font-medium">Terms &amp; Conditions</button>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Policy -->
+                        <section id="privacySection" aria-labelledby="privacy-policy-title" class="settings-section bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 id="privacy-policy-title" class="text-xl font-semibold mb-4">Privacy Policy</h3>
+                            <p class="text-gray-700 dark:text-gray-300 mb-4">Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">Information We Collect</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is committed to protecting your privacy. We collect minimal information necessary to provide our services:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Search queries to improve dictionary functionality</li>
+                                <li>Favorite words and learning progress (stored locally)</li>
+                                <li>Usage analytics to enhance user experience</li>
+                                <li>Account information if you choose to create an account</li>
+                            </ul>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">How We Use Your Information</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">We use the information we collect to:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Provide and improve our dictionary services</li>
+                                <li>Personalize your learning experience</li>
+                                <li>Save your preferences and progress</li>
+                                <li>Communicate with you about updates and features</li>
+                                <li>Ensure the security and proper functioning of our platform</li>
+                            </ul>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">Data Protection</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">We implement appropriate security measures to protect your personal information:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Secure data transmission using encryption</li>
+                                <li>Regular security audits and updates</li>
+                                <li>Limited access to personal information</li>
+                                <li>Data minimization practices</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mt-3">Most of your data, including favorites and learning progress, is stored locally on your device and is not transmitted to our servers unless you explicitly choose to sync across devices.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">Your Rights</h4>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>Access your personal data</li>
+                                <li>Correct inaccurate information</li>
+                                <li>Delete your account and associated data</li>
+                                <li>Export your data</li>
+                                <li>Opt out of analytics tracking</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300">To exercise these rights or if you have any privacy concerns, please contact us at <a href="mailto:ujclnove@gmail.com" class="text-primary hover:text-primary-dark underline">ujclnove@gmail.com</a></p>
+                        </section>
+
+                        <!-- Terms & Conditions -->
+                        <section id="termsSection" aria-labelledby="terms-title" class="settings-section hidden bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 id="terms-title" class="text-xl font-semibold mb-4">Terms &amp; Conditions</h3>
+
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">Please read these terms and conditions carefully before using ChakmaLex.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Acceptance of Terms</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">By accessing and using ChakmaLex, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is a digital dictionary platform dedicated to preserving and promoting the Chakma language. These terms govern your use of our services, features, and content.</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">If you do not agree to abide by the above, please do not use this service.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Use of the Service</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is provided for educational, cultural, and linguistic purposes. You may use our service to:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Search and explore Chakma language dictionary entries</li>
+                                <li>Learn Chakma language through our educational features</li>
+                                <li>Save favorite words and track learning progress</li>
+                                <li>Participate in language quizzes and challenges</li>
+                                <li>Access pronunciation guides and cultural information</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mt-3">You agree not to use ChakmaLex for any unlawful or prohibited activities, including but not limited to: distributing malicious content, attempting to compromise system security, or using automated tools to access our services excessively.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Content and Intellectual Property</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">The content on ChakmaLex, including dictionary entries, translations, pronunciations, and cultural information, is provided for educational and cultural preservation purposes.</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>Content is curated through scholarly research and community collaboration</li>
+                                <li>Users may reference and cite our content for educational purposes</li>
+                                <li>Commercial use requires explicit permission</li>
+                                <li>We respect the intellectual property rights of others</li>
+                                <li>Users retain rights to their personal data and learning progress</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">If you believe any content infringes on your rights, please contact us immediately for resolution.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">User Accounts and Data</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">When you create an account or use our services:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>You are responsible for maintaining account security</li>
+                                <li>Your learning progress and favorites are stored locally by default</li>
+                                <li>We may collect usage analytics to improve our services</li>
+                                <li>You can delete your account and data at any time</li>
+                                <li>We do not sell your personal information to third parties</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300">For detailed information about data handling, please refer to our Privacy Policy.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Disclaimers and Limitations</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is provided "as is" without warranties of any kind. While we strive for accuracy:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>Dictionary content may contain errors or omissions</li>
+                                <li>Services may be temporarily unavailable for maintenance</li>
+                                <li>We are not liable for decisions made based on our content</li>
+                                <li>Language learning results may vary by individual</li>
+                                <li>We reserve the right to modify or discontinue features</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">For questions about accuracy or content, please contact our editorial team.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Changes to Terms</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">We may update these terms periodically to reflect changes in our services or legal requirements.</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">Users will be notified of significant changes, and continued use of ChakmaLex constitutes acceptance of updated terms.</p>
+                            <p class="text-gray-700 dark:text-gray-300">For questions about these terms, please contact us at <a href="mailto:ujclnove@gmail.com" class="text-primary hover:text-primary-dark underline">ujclnove@gmail.com</a></p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- More Screen -->
+            <div id="moreScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">More</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Additional options and links</p>
+                        </div>
+
+                        <div class="grid gap-3">
+                            <button id="moreCharactersBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Characters</button>
+                            <button id="moreAboutBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">About</button>
+                            <button id="moreWisdomBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Wisdom</button>
+                            <button id="moreQuizBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Quiz</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Characters Screen -->
+            <div id="charactersScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Characters</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Explore Chakma characters and script resources.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">Character list and learning tools will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Screen -->
+            <div id="aboutScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">About</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Learn about ChakmaLex and its mission.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">ChakmaLex is a project dedicated to preserving the Chakma language and script.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wisdom Screen -->
+            <div id="wisdomScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Wisdom</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Daily proverbs and wisdom in Chakma.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">"A proverb will be added here."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quizScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Quiz</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Test your knowledge with short quizzes.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <button id="startQuizBtn" class="px-4 py-2 bg-primary text-white rounded-lg">Start Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 safe-area-inset-bottom">
+            <div class="max-w-md mx-auto px-4">
+                <div class="flex justify-around">
+                    <button class="nav-btn active flex flex-col items-center py-3 px-4 text-primary" data-screen="search">
+                        <i class="fas fa-search text-xl mb-1"></i>
+                        <span class="text-xs">Search</span>
+                    </button>
+                    <button class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" data-screen="favorites">
+                        <i class="fas fa-heart text-xl mb-1"></i>
+                        <span class="text-xs">Favorites</span>
+                    </button>
+                    <button class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" data-screen="more">
+                        <i class="fas fa-ellipsis-h text-xl mb-1"></i>
+                        <span class="text-xs">More</span>
+                    </button>
+                    <button id="settingsBtn" class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" aria-label="Settings" data-screen="settings">
+                        <i class="fas fa-cog text-xl mb-1"></i>
+                        <span class="text-xs">Settings</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Word Detail Modal -->
+    <div id="wordDetailModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50" id="modalOverlay"></div>
+        <div class="absolute inset-x-0 bottom-24 sm:bottom-32 md:bottom-40 lg:bottom-44 bg-white dark:bg-gray-800 rounded-t-3xl max-h-[90vh] overflow-hidden">
+            <div class="p-6">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex-1">
+                        <h2 id="modalWordTitle" class="text-3xl font-bold"></h2>
+                        <div class="flex items-center space-x-4 mt-2">
+                            <span id="modalPronunciation" class="text-lg text-gray-600 dark:text-gray-400"></span>
+                            <button id="playAudioBtn" class="p-2 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors">
+                                <i class="fas fa-play text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="favoriteBtn" class="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-heart text-xl"></i>
+                        </button>
+                        <button id="closeModalBtn" class="p-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal Content -->
+                <div class="max-h-[60vh] overflow-y-auto">
+                    <!-- Tabs -->
+                    <div class="flex space-x-1 mb-6 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                        <button class="modal-tab active flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="definition">Definition</button>
+                        <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="examples">Examples</button>
+                        <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="synonyms">Synonyms</button>
+                        <button class="modal-tab flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors" data-tab="etymology">Etymology</button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="space-y-6">
+                        <div id="definitionTab" class="tab-content">
+                            <div class="mb-4">
+                                <span id="modalPartOfSpeech" class="inline-block px-3 py-1 bg-primary bg-opacity-20 text-primary rounded-full text-sm font-medium"></span>
+                            </div>
+                            <div id="modalShortDefinition" class="text-lg mb-4"></div>
+                            <div id="modalLongDefinition" class="prose dark:prose-invert max-w-none"></div>
+                        </div>
+
+                        <div id="examplesTab" class="tab-content hidden">
+                            <div id="modalExamples" class="space-y-4"></div>
+                        </div>
+
+                        <div id="synonymsTab" class="tab-content hidden">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <h4 class="font-semibold text-green-600 dark:text-green-400 mb-3">Synonyms</h4>
+                                    <div id="modalSynonyms" class="flex flex-wrap gap-2"></div>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-red-600 dark:text-red-400 mb-3">Antonyms</h4>
+                                    <div id="modalAntonyms" class="flex flex-wrap gap-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="etymologyTab" class="tab-content hidden">
+                            <div id="modalEtymology" class="text-gray-700 dark:text-gray-300"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        // App State
+        let currentWords = [];
+        let favorites = new Set();
+        let currentWord = null;
+
+        // Dark mode detection and handling
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Sample data
+        const sampleWords = [
+            {
+                id: 'ephemeral-1',
+                term: 'ephemeral',
+                pronunciationIPA: '/ɪˈfɛm.ər.əl/',
+                partOfSpeech: 'adjective',
+                shortDefinition: 'Lasting for a very short time; temporary or fleeting in nature.',
+                longDefinition: '**Ephemeral** refers to something that exists or lasts for only a brief period. It emphasizes the transient nature of experiences, objects, or phenomena that appear and disappear quickly.\n\nThe concept often carries a poetic or philosophical weight, highlighting the precious nature of temporary moments.',
+                synonyms: ['temporary', 'fleeting', 'transient', 'brief', 'momentary', 'short-lived'],
+                antonyms: ['permanent', 'eternal', 'lasting', 'enduring', 'persistent'],
+                usageExamples: [
+                    'The ephemeral beauty of cherry blossoms draws millions of visitors to Japan each spring.',
+                    'Morning dew is ephemeral, disappearing with the first rays of sunlight.',
+                    'Social media posts often feel ephemeral, quickly buried by newer content.'
+                ],
+                tags: ['literature', 'philosophy', 'formal'],
+                etymology: 'From Greek ephēmeros, literally meaning "lasting only a day" (epi- "upon" + hēmera "day")',
+                audioURL: null,
+                createdAt: '2024-01-15T10:30:00Z',
+                updatedAt: '2024-01-15T10:30:00Z'
+            },
+            {
+                id: 'serendipity-2',
+                term: 'serendipity',
+                pronunciationIPA: '/ˌsɛr.ənˈdɪp.ɪ.ti/',
+                partOfSpeech: 'noun',
+                shortDefinition: 'The occurrence of events by chance in a happy or beneficial way; a pleasant surprise.',
+                longDefinition: '**Serendipity** describes the faculty of making fortunate discoveries by accident. It\'s often used to describe unexpected positive outcomes that arise from unplanned circumstances.\n\nThe term suggests a combination of chance and wisdom - being prepared to recognize and capitalize on fortunate accidents.',
+                synonyms: ['fortune', 'luck', 'chance', 'providence', 'destiny', 'kismet'],
+                antonyms: ['misfortune', 'bad luck', 'design', 'planning'],
+                usageExamples: [
+                    'Meeting my best friend was pure serendipity - we both reached for the same book at the library.',
+                    'The discovery of penicillin was a famous example of serendipity in scientific research.',
+                    'Sometimes the best travel experiences come from serendipity rather than careful planning.'
+                ],
+                tags: ['positive', 'philosophy', 'chance'],
+                etymology: 'Coined by Horace Walpole in 1754, from the Persian fairy tale "The Three Princes of Serendip"',
+                audioURL: null,
+                createdAt: '2024-01-16T14:20:00Z',
+                updatedAt: '2024-01-16T14:20:00Z'
+            },
+            {
+                id: 'quintessential-3',
+                term: 'quintessential',
+                pronunciationIPA: '/ˌkwɪn.təˈsɛn.ʃəl/',
+                partOfSpeech: 'adjective',
+                shortDefinition: 'Representing the most perfect or typical example of a quality or class; the essence of something.',
+                longDefinition: '**Quintessential** describes something that perfectly embodies the essential characteristics of a particular category or concept. It represents the purest, most concentrated form of a quality.\n\nThe word suggests not just typicality, but the highest or most refined expression of particular traits.',
+                synonyms: ['typical', 'characteristic', 'archetypal', 'classic', 'definitive', 'perfect'],
+                antonyms: ['atypical', 'unusual', 'uncharacteristic', 'abnormal'],
+                usageExamples: [
+                    'The cottage with its thatched roof and garden was quintessentially English.',
+                    'Jazz music is often considered the quintessential American art form.',
+                    'Her response was quintessentially diplomatic - saying much while revealing nothing.'
+                ],
+                tags: ['formal', 'descriptive', 'academic'],
+                etymology: 'From Medieval Latin quinta essentia, literally "fifth essence" - the pure essence of a thing',
+                audioURL: null,
+                createdAt: '2024-01-17T09:15:00Z',
+                updatedAt: '2024-01-17T09:15:00Z'
+            },
+            {
+                id: 'mellifluous-4',
+                term: 'mellifluous',
+                pronunciationIPA: '/məˈlɪf.lu.əs/',
+                partOfSpeech: 'adjective',
+                shortDefinition: 'Having a smooth, musical, and pleasant sound; sweet-flowing in speech or tone.',
+                longDefinition: '**Mellifluous** describes sounds, especially voices or music, that flow smoothly and pleasantly. The word evokes honey-like sweetness and fluidity.\n\nIt\'s often used to describe speaking voices, musical performances, or even writing styles that have a particularly smooth, appealing quality.',
+                synonyms: ['melodious', 'musical', 'harmonious', 'dulcet', 'euphonious', 'sweet'],
+                antonyms: ['harsh', 'grating', 'discordant', 'cacophonous', 'jarring'],
+                usageExamples: [
+                    'The singer\'s mellifluous voice captivated the entire audience.',
+                    'Poetry readings are enhanced by a mellifluous delivery that matches the verse.',
+                    'The professor\'s mellifluous lectures made even complex topics seem accessible.'
+                ],
+                tags: ['literary', 'music', 'formal', 'descriptive'],
+                etymology: 'From Latin mellifluus, from mel (honey) + fluere (to flow) - literally "honey-flowing"',
+                audioURL: null,
+                createdAt: '2024-01-18T16:45:00Z',
+                updatedAt: '2024-01-18T16:45:00Z'
+            },
+            {
+                id: 'ubiquitous-5',
+                term: 'ubiquitous',
+                pronunciationIPA: '/juˈbɪk.wɪ.təs/',
+                partOfSpeech: 'adjective',
+                shortDefinition: 'Present, appearing, or found everywhere; seeming to be in all places at all times.',
+                longDefinition: '**Ubiquitous** describes something that appears to exist everywhere simultaneously. It suggests omnipresence or widespread occurrence to the point of being inescapable.\n\nThe term is often used in modern contexts to describe technology, brands, or cultural phenomena that have achieved widespread penetration.',
+                synonyms: ['omnipresent', 'pervasive', 'universal', 'widespread', 'prevalent', 'everywhere'],
+                antonyms: ['rare', 'scarce', 'absent', 'limited', 'localized'],
+                usageExamples: [
+                    'Smartphones have become ubiquitous in modern society.',
+                    'The company\'s logo is now ubiquitous, appearing on everything from clothing to coffee cups.',
+                    'Social media\'s ubiquitous presence has changed how we communicate.'
+                ],
+                tags: ['modern', 'technology', 'formal', 'descriptive'],
+                etymology: 'From Latin ubique meaning "everywhere" + -ous suffix',
+                audioURL: null,
+                createdAt: '2024-01-19T11:30:00Z',
+                updatedAt: '2024-01-19T11:30:00Z'
+            }
+        ];
+
+        // Initialize app
+        function initializeApp() {
+            // Load data from localStorage
+            loadData();
+            
+            // Set up event listeners
+            setupEventListeners();
+            
+            // Initialize search
+            updateSearchResults('');
+            
+            // Focus search input
+            document.getElementById('searchInput').focus();
+        }
+
+        function loadData() {
+            // Load words
+            const storedWords = localStorage.getItem('ChakmaLexWords');
+            if (storedWords) {
+                currentWords = JSON.parse(storedWords);
+            } else {
+                currentWords = [...sampleWords];
+                saveData();
+            }
+
+            // Load favorites
+            const storedFavorites = localStorage.getItem('ChakmaLexFavorites');
+            if (storedFavorites) {
+                favorites = new Set(JSON.parse(storedFavorites));
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('ChakmaLexWords', JSON.stringify(currentWords));
+            localStorage.setItem('ChakmaLexFavorites', JSON.stringify([...favorites]));
+        }
+
+        function setupEventListeners() {
+            // Make app logo return to home from anywhere
+            const appLogo = document.getElementById('appLogoBtn');
+            const siteTitle = document.getElementById('siteTitle');
+            if (appLogo) {
+                appLogo.addEventListener('click', () => {
+                    // Switch to search screen and update nav state
+                    switchScreen('search');
+                    document.querySelectorAll('.nav-btn').forEach(b => {
+                        b.classList.remove('active', 'text-primary');
+                        b.classList.add('text-gray-400');
+                    });
+                    const searchNav = document.querySelector('.nav-btn[data-screen="search"]');
+                    if (searchNav) {
+                        searchNav.classList.add('active', 'text-primary');
+                        searchNav.classList.remove('text-gray-400');
+                    }
+
+                    // Close potential overlays/modals and focus search
+                    try { closeWordDetail(); } catch (e) {}
+
+                    const input = document.getElementById('searchInput');
+                    if (input) input.focus();
+                    // Scroll search results to top
+                    const resultsContainer = document.querySelector('#searchScreen .flex-1');
+                    if (resultsContainer && typeof resultsContainer.scrollTo === 'function') {
+                        resultsContainer.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+
+                // accessibility: support Enter key
+                appLogo.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        appLogo.click();
+                    }
+                });
+
+                // Prevent copy/select on logo
+                appLogo.addEventListener('copy', (e) => e.preventDefault());
+                appLogo.addEventListener('selectstart', (e) => e.preventDefault());
+                appLogo.addEventListener('contextmenu', (e) => e.preventDefault());
+            }
+
+            // Prevent copy/select on site title
+            if (siteTitle) {
+                siteTitle.classList.add('unselectable');
+                siteTitle.addEventListener('copy', (e) => e.preventDefault());
+                siteTitle.addEventListener('selectstart', (e) => e.preventDefault());
+                siteTitle.addEventListener('contextmenu', (e) => e.preventDefault());
+            }
+
+            // Search functionality
+            const searchInput = document.getElementById('searchInput');
+            const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                updateSearchResults(query);
+
+                if (query.length > 0) {
+                    clearSearchBtn.classList.remove('hidden');
+                } else {
+                    clearSearchBtn.classList.add('hidden');
+                }
+            });
+
+            clearSearchBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                clearSearchBtn.classList.add('hidden');
+                updateSearchResults('');
+                searchInput.focus();
+            });
+
+            // Navigation
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const screen = btn.dataset.screen;
+                    if (screen) {
+                        switchScreen(screen);
+
+                        // Update active state
+                        document.querySelectorAll('.nav-btn').forEach(b => {
+                            b.classList.remove('active', 'text-primary');
+                            b.classList.add('text-gray-400');
+                        });
+                        btn.classList.add('active', 'text-primary');
+                        btn.classList.remove('text-gray-400');
+                    }
+                });
+            });
+
+            // Dark mode toggle
+            document.getElementById('darkModeToggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+            });
+
+            // Settings button behavior
+            const settingsBtn = document.getElementById('settingsBtn');
+            // No long-press behavior; settings opens on normal click via nav buttons
+
+            // Settings tabs inside settings screen
+            document.querySelectorAll('[data-settings-tab]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.settingsTab;
+                    document.querySelectorAll('.settings-section').forEach(s => s.classList.add('hidden'));
+                    const el = document.getElementById(target);
+                    if (el) el.classList.remove('hidden');
+
+                    // update active styles
+                    document.querySelectorAll('[data-settings-tab]').forEach(b => {
+                        b.classList.remove('bg-white','dark:bg-gray-600','text-primary','dark:text-primary');
+                        b.classList.add('text-gray-600','dark:text-gray-300');
+                    });
+                    btn.classList.add('bg-white','dark:bg-gray-600','text-primary','dark:text-primary');
+                    btn.classList.remove('text-gray-600','dark:text-gray-300');
+                });
+            });
+
+            // More screen buttons
+            const moreCharactersBtn = document.getElementById('moreCharactersBtn');
+            const moreAboutBtn = document.getElementById('moreAboutBtn');
+            const moreWisdomBtn = document.getElementById('moreWisdomBtn');
+            const moreQuizBtn = document.getElementById('moreQuizBtn');
+
+            if (moreCharactersBtn) {
+                moreCharactersBtn.addEventListener('click', () => {
+                    switchScreen('characters');
+                });
+            }
+            if (moreAboutBtn) {
+                moreAboutBtn.addEventListener('click', () => {
+                    switchScreen('about');
+                });
+            }
+            if (moreWisdomBtn) {
+                moreWisdomBtn.addEventListener('click', () => {
+                    switchScreen('wisdom');
+                });
+            }
+            if (moreQuizBtn) {
+                moreQuizBtn.addEventListener('click', () => {
+                    switchScreen('quiz');
+                });
+            }
+
+            // Modal functionality
+            setupModalListeners();
+
+            // Word form
+        }
+
+        function updateSearchResults(query) {
+            const resultsContainer = document.getElementById('searchResults');
+            const welcomeState = document.getElementById('welcomeState');
+            const noResultsState = document.getElementById('noResultsState');
+
+            if (query.trim() === '') {
+                // Show welcome state
+                resultsContainer.classList.add('hidden');
+                noResultsState.classList.add('hidden');
+                welcomeState.classList.remove('hidden');
+                return;
+            }
+
+            // Hide welcome state
+            welcomeState.classList.add('hidden');
+
+            // Search words
+            const results = searchWords(query);
+
+            if (results.length === 0) {
+                resultsContainer.classList.add('hidden');
+                noResultsState.classList.remove('hidden');
+                return;
+            }
+
+            // Show results
+            noResultsState.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            
+            resultsContainer.innerHTML = results.map(word => createWordCard(word)).join('');
+
+            // Add click listeners to word cards
+            resultsContainer.querySelectorAll('.word-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const wordId = card.dataset.wordId;
+                    const word = currentWords.find(w => w.id === wordId);
+                    if (word) {
+                        openWordDetail(word);
+                    }
+                });
+            });
+        }
+
+        function searchWords(query) {
+            const lowerQuery = query.toLowerCase();
+            
+            // Prefix search first
+            const prefixMatches = currentWords.filter(word => 
+                word.term.toLowerCase().startsWith(lowerQuery)
+            );
+            
+            // Fuzzy search for remaining words
+            const fuzzyMatches = currentWords.filter(word => 
+                !word.term.toLowerCase().startsWith(lowerQuery) &&
+                (word.term.toLowerCase().includes(lowerQuery) ||
+                 word.shortDefinition.toLowerCase().includes(lowerQuery) ||
+                 word.tags.some(tag => tag.toLowerCase().includes(lowerQuery)))
+            );
+            
+            return [...prefixMatches, ...fuzzyMatches].slice(0, 20);
+        }
+
+        function createWordCard(word) {
+            const isFavorite = favorites.has(word.id);
+            return `
+                <div class="word-card bg-white dark:bg-gray-800 rounded-xl p-4 shadow-sm border border-gray-200 dark:border-gray-700 cursor-pointer" data-word-id="${word.id}">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-3 mb-2">
+                                <h3 class="text-lg font-semibold">${word.term}</h3>
+                                <span class="text-sm text-gray-500 dark:text-gray-400">${word.pronunciationIPA || ''}</span>
+                                <span class="px-2 py-1 bg-primary bg-opacity-20 text-primary rounded text-xs font-medium">${word.partOfSpeech}</span>
+                            </div>
+                            <p class="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">${word.shortDefinition}</p>
+                            ${word.tags.length > 0 ? `
+                                <div class="flex flex-wrap gap-1 mt-2">
+                                    ${word.tags.slice(0, 3).map(tag => `<span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-xs">${tag}</span>`).join('')}
+                                    ${word.tags.length > 3 ? `<span class="text-xs text-gray-400">+${word.tags.length - 3} more</span>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <button class="favorite-btn p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${isFavorite ? 'text-red-500' : 'text-gray-400'}" data-word-id="${word.id}" onclick="event.stopPropagation(); toggleFavorite('${word.id}')">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function switchScreen(screenName) {
+            // Hide all screens
+            document.querySelectorAll('[id$="Screen"]').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            
+            // Show target screen
+            document.getElementById(screenName + 'Screen').classList.remove('hidden');
+            
+            if (screenName === 'favorites') {
+                updateFavoritesList();
+            }
+        }
+
+        function updateFavoritesList() {
+            const favoritesList = document.getElementById('favoritesList');
+            const emptyState = document.getElementById('emptyFavoritesState');
+            
+            const favoriteWords = currentWords.filter(word => favorites.has(word.id));
+            
+            if (favoriteWords.length === 0) {
+                favoritesList.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            favoritesList.classList.remove('hidden');
+            
+            favoritesList.innerHTML = favoriteWords.map(word => createWordCard(word)).join('');
+            
+            // Add click listeners
+            favoritesList.querySelectorAll('.word-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const wordId = card.dataset.wordId;
+                    const word = currentWords.find(w => w.id === wordId);
+                    if (word) {
+                        openWordDetail(word);
+                    }
+                });
+            });
+        }
+
+        function toggleFavorite(wordId) {
+            if (favorites.has(wordId)) {
+                favorites.delete(wordId);
+            } else {
+                favorites.add(wordId);
+            }
+            
+            saveData();
+            
+            // Update UI
+            const currentQuery = document.getElementById('searchInput').value;
+            updateSearchResults(currentQuery);
+            
+            // Update favorites screen if visible
+            if (!document.getElementById('favoritesScreen').classList.contains('hidden')) {
+                updateFavoritesList();
+            }
+            
+            // Update modal if open
+            if (currentWord && currentWord.id === wordId) {
+                updateFavoriteButton();
+            }
+        }
+
+        function setupModalListeners() {
+            const modal = document.getElementById('wordDetailModal');
+            const overlay = document.getElementById('modalOverlay');
+            const closeBtn = document.getElementById('closeModalBtn');
+            
+            [overlay, closeBtn].forEach(element => {
+                element.addEventListener('click', closeWordDetail);
+            });
+            
+            // Tab switching
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.dataset.tab;
+                    switchModalTab(targetTab);
+                });
+            });
+            
+            // Favorite button
+            document.getElementById('favoriteBtn').addEventListener('click', () => {
+                if (currentWord) {
+                    toggleFavorite(currentWord.id);
+                }
+            });
+            
+            // Audio button (placeholder)
+            document.getElementById('playAudioBtn').addEventListener('click', () => {
+                // Placeholder for audio functionality
+                console.log('Play audio for:', currentWord?.term);
+            });
+        }
+
+        function openWordDetail(word) {
+            currentWord = word;
+            const modal = document.getElementById('wordDetailModal');
+            
+            // Populate modal content
+            document.getElementById('modalWordTitle').textContent = word.term;
+            document.getElementById('modalPronunciation').textContent = word.pronunciationIPA || '';
+            document.getElementById('modalPartOfSpeech').textContent = word.partOfSpeech;
+            document.getElementById('modalShortDefinition').textContent = word.shortDefinition;
+            
+            // Long definition (with markdown)
+            const longDefContainer = document.getElementById('modalLongDefinition');
+            if (word.longDefinition) {
+                longDefContainer.innerHTML = marked.parse(word.longDefinition);
+            } else {
+                longDefContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic">No detailed definition available.</p>';
+            }
+            
+            // Examples
+            const examplesContainer = document.getElementById('modalExamples');
+            if (word.usageExamples && word.usageExamples.length > 0) {
+                examplesContainer.innerHTML = word.usageExamples.map(example => 
+                    `<div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border-l-4 border-primary">
+                        <p class="italic">"${example}"</p>
+                    </div>`
+                ).join('');
+            } else {
+                examplesContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic">No usage examples available.</p>';
+            }
+            
+            // Synonyms and antonyms
+            const synonymsContainer = document.getElementById('modalSynonyms');
+            const antonymsContainer = document.getElementById('modalAntonyms');
+            
+            if (word.synonyms && word.synonyms.length > 0) {
+                synonymsContainer.innerHTML = word.synonyms.map(synonym => 
+                    `<span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-sm">${synonym}</span>`
+                ).join('');
+            } else {
+                synonymsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">None available</p>';
+            }
+            
+            if (word.antonyms && word.antonyms.length > 0) {
+                antonymsContainer.innerHTML = word.antonyms.map(antonym => 
+                    `<span class="px-3 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-full text-sm">${antonym}</span>`
+                ).join('');
+            } else {
+                antonymsContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic text-sm">None available</p>';
+            }
+            
+            // Etymology
+            const etymologyContainer = document.getElementById('modalEtymology');
+            if (word.etymology) {
+                etymologyContainer.innerHTML = `<p>${word.etymology}</p>`;
+            } else {
+                etymologyContainer.innerHTML = '<p class="text-gray-500 dark:text-gray-400 italic">No etymology information available.</p>';
+            }
+            
+            // Update favorite button
+            updateFavoriteButton();
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            
+            // Reset to first tab
+            switchModalTab('definition');
+        }
+
+        function updateFavoriteButton() {
+            const favoriteBtn = document.getElementById('favoriteBtn');
+            const isFavorite = favorites.has(currentWord.id);
+            
+            if (isFavorite) {
+                favoriteBtn.classList.add('text-red-500');
+                favoriteBtn.classList.remove('text-gray-400');
+            } else {
+                favoriteBtn.classList.remove('text-red-500');
+                favoriteBtn.classList.add('text-gray-400');
+            }
+        }
+
+        function closeWordDetail() {
+            document.getElementById('wordDetailModal').classList.add('hidden');
+            currentWord = null;
+        }
+
+        function switchModalTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.modal-tab').forEach(tab => {
+                tab.classList.remove('active', 'bg-white', 'dark:bg-gray-600', 'text-primary', 'dark:text-primary');
+                tab.classList.add('text-gray-600', 'dark:text-gray-400');
+            });
+            
+            const activeTab = document.querySelector(`[data-tab="${tabName}"]`);
+            activeTab.classList.add('active', 'bg-white', 'dark:bg-gray-600', 'text-primary', 'dark:text-primary');
+            activeTab.classList.remove('text-gray-600', 'dark:text-gray-400');
+            
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            document.getElementById(tabName + 'Tab').classList.remove('hidden');
+        }
+
+
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
 </html>
