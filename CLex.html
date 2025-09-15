@@ -677,9 +677,6 @@
                         });
                         btn.classList.add('active', 'text-primary');
                         btn.classList.remove('text-gray-400');
-                    } else if (btn.id === 'settingsBtn') {
-                        // Open settings (short tap)
-                        openDevConsole();
                     }
                 });
             });
@@ -715,7 +712,6 @@
             const moreSettingsBtn = document.getElementById('moreSettingsBtn');
             const morePrivacyBtn = document.getElementById('morePrivacyBtn');
             const moreTermsBtn = document.getElementById('moreTermsBtn');
-            const moreDevConsoleBtn = document.getElementById('moreDevConsoleBtn');
 
             if (moreSettingsBtn) {
                 moreSettingsBtn.addEventListener('click', () => {
@@ -741,7 +737,6 @@
             setupModalListeners();
 
             // Word form
-            setupWordFormListeners();
         }
 
         function updateSearchResults(query) {
