@@ -320,12 +320,72 @@
                         </div>
 
                         <div class="grid gap-3">
-                            <button id="moreSettingsBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Open Settings</button>
-                            <button id="morePrivacyBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Privacy Policy</button>
-                            <button id="moreTermsBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Terms &amp; Conditions</button>
-                            <a href="mailto:ujclnove@gmail.com" class="w-full block px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 text-left">Contact Us</a>
+                            <button id="moreCharactersBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Characters</button>
+                            <button id="moreAboutBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">About</button>
+                            <button id="moreWisdomBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Wisdom</button>
+                            <button id="moreQuizBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Quiz</button>
                         </div>
 
+                    </div>
+                </div>
+            </div>
+
+            <!-- Characters Screen -->
+            <div id="charactersScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Characters</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Explore Chakma characters and script resources.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">Character list and learning tools will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Screen -->
+            <div id="aboutScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">About</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Learn about ChakmaLex and its mission.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">ChakmaLex is a project dedicated to preserving the Chakma language and script.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wisdom Screen -->
+            <div id="wisdomScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Wisdom</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Daily proverbs and wisdom in Chakma.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">"A proverb will be added here."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quizScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Quiz</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Test your knowledge with short quizzes.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <button id="startQuizBtn" class="px-4 py-2 bg-primary text-white rounded-lg">Start Quiz</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -709,27 +769,29 @@
             });
 
             // More screen buttons
-            const moreSettingsBtn = document.getElementById('moreSettingsBtn');
-            const morePrivacyBtn = document.getElementById('morePrivacyBtn');
-            const moreTermsBtn = document.getElementById('moreTermsBtn');
+            const moreCharactersBtn = document.getElementById('moreCharactersBtn');
+            const moreAboutBtn = document.getElementById('moreAboutBtn');
+            const moreWisdomBtn = document.getElementById('moreWisdomBtn');
+            const moreQuizBtn = document.getElementById('moreQuizBtn');
 
-            if (moreSettingsBtn) {
-                moreSettingsBtn.addEventListener('click', () => {
-                    switchScreen('settings');
+            if (moreCharactersBtn) {
+                moreCharactersBtn.addEventListener('click', () => {
+                    switchScreen('characters');
                 });
             }
-            if (morePrivacyBtn) {
-                morePrivacyBtn.addEventListener('click', () => {
-                    switchScreen('settings');
-                    const privacyTab = document.querySelector('[data-settings-tab="privacySection"]');
-                    if (privacyTab) privacyTab.click();
+            if (moreAboutBtn) {
+                moreAboutBtn.addEventListener('click', () => {
+                    switchScreen('about');
                 });
             }
-            if (moreTermsBtn) {
-                moreTermsBtn.addEventListener('click', () => {
-                    switchScreen('settings');
-                    const termsTab = document.querySelector('[data-settings-tab="termsSection"]');
-                    if (termsTab) termsTab.click();
+            if (moreWisdomBtn) {
+                moreWisdomBtn.addEventListener('click', () => {
+                    switchScreen('wisdom');
+                });
+            }
+            if (moreQuizBtn) {
+                moreQuizBtn.addEventListener('click', () => {
+                    switchScreen('quiz');
                 });
             }
 
