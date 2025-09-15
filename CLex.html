@@ -192,7 +192,16 @@
                             <p class="text-gray-600 dark:text-gray-400">Manage your preferences and privacy</p>
                         </div>
 
-                        <section aria-labelledby="privacy-policy-title" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                        <!-- Settings Tabs -->
+                        <div class="mb-6">
+                            <div class="flex space-x-2 bg-gray-100 dark:bg-gray-700 p-1 rounded-lg">
+                                <button data-settings-tab="privacySection" class="settings-tab bg-white dark:bg-gray-600 text-primary dark:text-primary px-4 py-2 rounded-md text-sm font-medium">Privacy Policy</button>
+                                <button data-settings-tab="termsSection" class="settings-tab text-gray-600 dark:text-gray-300 px-4 py-2 rounded-md text-sm font-medium">Terms &amp; Conditions</button>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Policy -->
+                        <section id="privacySection" aria-labelledby="privacy-policy-title" class="settings-section bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
                             <h3 id="privacy-policy-title" class="text-xl font-semibold mb-4">Privacy Policy</h3>
                             <p class="text-gray-700 dark:text-gray-300 mb-4">Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>
 
@@ -234,6 +243,67 @@
                                 <li>Opt out of analytics tracking</li>
                             </ul>
                             <p class="text-gray-700 dark:text-gray-300">To exercise these rights or if you have any privacy concerns, please contact us at <a href="mailto:ujclnove@gmail.com" class="text-primary hover:text-primary-dark underline">ujclnove@gmail.com</a></p>
+                        </section>
+
+                        <!-- Terms & Conditions -->
+                        <section id="termsSection" aria-labelledby="terms-title" class="settings-section hidden bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 id="terms-title" class="text-xl font-semibold mb-4">Terms &amp; Conditions</h3>
+
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">Please read these terms and conditions carefully before using ChakmaLex.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Acceptance of Terms</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">By accessing and using ChakmaLex, you accept and agree to be bound by the terms and provision of this agreement.</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is a digital dictionary platform dedicated to preserving and promoting the Chakma language. These terms govern your use of our services, features, and content.</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">If you do not agree to abide by the above, please do not use this service.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Use of the Service</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is provided for educational, cultural, and linguistic purposes. You may use our service to:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Search and explore Chakma language dictionary entries</li>
+                                <li>Learn Chakma language through our educational features</li>
+                                <li>Save favorite words and track learning progress</li>
+                                <li>Participate in language quizzes and challenges</li>
+                                <li>Access pronunciation guides and cultural information</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mt-3">You agree not to use ChakmaLex for any unlawful or prohibited activities, including but not limited to: distributing malicious content, attempting to compromise system security, or using automated tools to access our services excessively.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Content and Intellectual Property</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">The content on ChakmaLex, including dictionary entries, translations, pronunciations, and cultural information, is provided for educational and cultural preservation purposes.</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>Content is curated through scholarly research and community collaboration</li>
+                                <li>Users may reference and cite our content for educational purposes</li>
+                                <li>Commercial use requires explicit permission</li>
+                                <li>We respect the intellectual property rights of others</li>
+                                <li>Users retain rights to their personal data and learning progress</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">If you believe any content infringes on your rights, please contact us immediately for resolution.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">User Accounts and Data</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">When you create an account or use our services:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>You are responsible for maintaining account security</li>
+                                <li>Your learning progress and favorites are stored locally by default</li>
+                                <li>We may collect usage analytics to improve our services</li>
+                                <li>You can delete your account and data at any time</li>
+                                <li>We do not sell your personal information to third parties</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300">For detailed information about data handling, please refer to our Privacy Policy.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Disclaimers and Limitations</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is provided "as is" without warranties of any kind. While we strive for accuracy:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>Dictionary content may contain errors or omissions</li>
+                                <li>Services may be temporarily unavailable for maintenance</li>
+                                <li>We are not liable for decisions made based on our content</li>
+                                <li>Language learning results may vary by individual</li>
+                                <li>We reserve the right to modify or discontinue features</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">For questions about accuracy or content, please contact our editorial team.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-4 mb-2">Changes to Terms</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">We may update these terms periodically to reflect changes in our services or legal requirements.</p>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">Users will be notified of significant changes, and continued use of ChakmaLex constitutes acceptance of updated terms.</p>
+                            <p class="text-gray-700 dark:text-gray-300">For questions about these terms, please contact us at <a href="mailto:ujclnove@gmail.com" class="text-primary hover:text-primary-dark underline">ujclnove@gmail.com</a></p>
                         </section>
                     </div>
                 </div>
@@ -770,6 +840,24 @@ Morning dew is ephemeral, disappearing with the sunrise." class="w-full text-bas
 
             settingsBtn.addEventListener('touchend', () => {
                 clearTimeout(pressTimer);
+            });
+
+            // Settings tabs inside settings screen
+            document.querySelectorAll('[data-settings-tab]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const target = btn.dataset.settingsTab;
+                    document.querySelectorAll('.settings-section').forEach(s => s.classList.add('hidden'));
+                    const el = document.getElementById(target);
+                    if (el) el.classList.remove('hidden');
+
+                    // update active styles
+                    document.querySelectorAll('[data-settings-tab]').forEach(b => {
+                        b.classList.remove('bg-white','dark:bg-gray-600','text-primary','dark:text-primary');
+                        b.classList.add('text-gray-600','dark:text-gray-300');
+                    });
+                    btn.classList.add('bg-white','dark:bg-gray-600','text-primary','dark:text-primary');
+                    btn.classList.remove('text-gray-600','dark:text-gray-300');
+                });
             });
 
             // Modal functionality
