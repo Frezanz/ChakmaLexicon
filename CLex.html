@@ -183,6 +183,61 @@
                     </div>
                 </div>
             </div>
+            <!-- Settings Screen -->
+            <div id="settingsScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Settings</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Manage your preferences and privacy</p>
+                        </div>
+
+                        <section aria-labelledby="privacy-policy-title" class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h3 id="privacy-policy-title" class="text-xl font-semibold mb-4">Privacy Policy</h3>
+                            <p class="text-gray-700 dark:text-gray-300 mb-4">Your privacy is important to us. This policy explains how we collect, use, and protect your information.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">Information We Collect</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">ChakmaLex is committed to protecting your privacy. We collect minimal information necessary to provide our services:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Search queries to improve dictionary functionality</li>
+                                <li>Favorite words and learning progress (stored locally)</li>
+                                <li>Usage analytics to enhance user experience</li>
+                                <li>Account information if you choose to create an account</li>
+                            </ul>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">How We Use Your Information</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">We use the information we collect to:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Provide and improve our dictionary services</li>
+                                <li>Personalize your learning experience</li>
+                                <li>Save your preferences and progress</li>
+                                <li>Communicate with you about updates and features</li>
+                                <li>Ensure the security and proper functioning of our platform</li>
+                            </ul>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-6 mb-2">Data Protection</h4>
+                            <p class="text-gray-700 dark:text-gray-300 mb-3">We implement appropriate security measures to protect your personal information:</p>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300">
+                                <li>Secure data transmission using encryption</li>
+                                <li>Regular security audits and updates</li>
+                                <li>Limited access to personal information</li>
+                                <li>Data minimization practices</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300 mt-3">Most of your data, including favorites and learning progress, is stored locally on your device and is not transmitted to our servers unless you explicitly choose to sync across devices.</p>
+
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-2 00 mt-6 mb-2">Your Rights</h4>
+                            <ul class="list-disc pl-6 space-y-1 text-gray-700 dark:text-gray-300 mb-3">
+                                <li>Access your personal data</li>
+                                <li>Correct inaccurate information</li>
+                                <li>Delete your account and associated data</li>
+                                <li>Export your data</li>
+                                <li>Opt out of analytics tracking</li>
+                            </ul>
+                            <p class="text-gray-700 dark:text-gray-300">To exercise these rights or if you have any privacy concerns, please contact us at <a href="mailto:ujclnove@gmail.com" class="text-primary hover:text-primary-dark underline">ujclnove@gmail.com</a></p>
+                        </section>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <!-- Bottom Navigation -->
@@ -197,7 +252,7 @@
                         <i class="fas fa-heart text-xl mb-1"></i>
                         <span class="text-xs">Favorites</span>
                     </button>
-                    <button id="settingsBtn" class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" aria-label="Settings">
+                    <button id="settingsBtn" class="nav-btn flex flex-col items-center py-3 px-4 text-gray-400" aria-label="Settings" data-screen="settings">
                         <i class="fas fa-cog text-xl mb-1"></i>
                         <span class="text-xs">Settings</span>
                     </button>
