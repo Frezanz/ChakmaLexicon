@@ -354,10 +354,12 @@
 
                         <div class="grid gap-3">
                             <button id="moreCharactersBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Characters</button>
+                            <button id="moreWorldBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">World</button>
+                            <button id="moreUsagesBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Usages</button>
+                            <button id="moreGrammarBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Grammar</button>
                             <button id="moreAboutBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">About</button>
                             <button id="moreWisdomBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Wisdom</button>
                             <button id="moreQuizBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">Quiz</button>
-                            <button id="moreWorldBtn" class="w-full text-left px-4 py-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">World</button>
                         </div>
 
                     </div>
@@ -556,6 +558,36 @@
                                 </div>
 
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usages Screen -->
+            <div id="usagesScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Usages</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Common phrases and expressions in Chakma.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">Common phrases, expressions, and usage patterns will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grammar Screen -->
+            <div id="grammarScreen" class="h-full hidden">
+                <div class="h-full overflow-y-auto">
+                    <div class="max-w-4xl mx-auto p-4">
+                        <div class="mb-6">
+                            <h2 class="text-2xl font-bold">Grammar</h2>
+                            <p class="text-gray-600 dark:text-gray-400">Chakma language grammar rules and structures.</p>
+                        </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
+                            <p class="text-gray-700 dark:text-gray-300">Grammar rules, sentence structures, and language patterns will appear here.</p>
                         </div>
                     </div>
                 </div>
@@ -946,6 +978,8 @@
             const moreWisdomBtn = document.getElementById('moreWisdomBtn');
             const moreQuizBtn = document.getElementById('moreQuizBtn');
             const moreWorldBtn = document.getElementById('moreWorldBtn');
+            const moreUsagesBtn = document.getElementById('moreUsagesBtn');
+            const moreGrammarBtn = document.getElementById('moreGrammarBtn');
 
             if (moreCharactersBtn) {
                 moreCharactersBtn.addEventListener('click', () => {
@@ -970,6 +1004,16 @@
             if (moreWorldBtn) {
                 moreWorldBtn.addEventListener('click', () => {
                     switchScreen('world');
+                });
+            }
+            if (moreUsagesBtn) {
+                moreUsagesBtn.addEventListener('click', () => {
+                    switchScreen('usages');
+                });
+            }
+            if (moreGrammarBtn) {
+                moreGrammarBtn.addEventListener('click', () => {
+                    switchScreen('grammar');
                 });
             }
 
